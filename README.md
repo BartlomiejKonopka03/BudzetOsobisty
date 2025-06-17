@@ -32,7 +32,7 @@ python gui.py
 
 ---
 
-## 🎛Funkcjonalności po zalogowaniu
+## Funkcjonalności po zalogowaniu
 
 1. **Dodaj transakcję** – podaj kwotę, kategorię, datę (`RRRR-MM-DD`) i opis.
 
