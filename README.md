@@ -13,7 +13,7 @@ Aplikacja pozwala na zarządzanie osobistymi finansami za pomocą przejrzystego 
 
 ## Uruchomienie aplikacji
 
-1. **Zainstaluj wymagane biblioteki** (jeśli nie masz):
+1. **Zainstaluj wymagane biblioteki**:
 
 pip install matplotlib
 
@@ -57,7 +57,7 @@ python gui.py
 - `data.py` – obsługa CSV: odczyt i zapis transakcji
 - `auth.py` – funkcje rejestracji, logowania i walidacji użytkowników
 - `utils.py` – zapis raportu tekstowego
-- `charts.py` – wykresy matplotlib (jeśli wyodrębnione)
+- `charts.py` – wykresy matplotlib
 - `tests/` – testy jednostkowe w `unittest`
 
 ---
