@@ -1,0 +1,11 @@
+amount,category,date,description
+4500.0,Wynagrodzenie,2025-05-01,Wypłata etatowa
+-1200.0,Czynsz,2025-05-03,Mieszkanie
+-350.0,Jedzenie,2025-05-06,Sklep
+-80.0,Rozrywka,2025-05-10,Netflix
+-200.0,Transport,2025-05-12,Benzyna
+400.0,Dodatkowe,2025-05-15,Zlecenie
+-250.0,Jedzenie,2025-06-01,Restauracja
+-150.0,Rozrywka,2025-06-05,Teatr
+-90.0,Transport,2025-06-08,Bilet
+600.0,Zwrot,2025-06-12,Zwrot podatku

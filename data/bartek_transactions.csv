@@ -1,0 +1,12 @@
+amount,category,date,description
+5000.0,Wynagrodzenie,2025-06-01,Wypłata
+-2000.0,Czynsz,2025-06-03,Mieszkanie
+-400.0,Jedzenie,2025-06-04,Sklep spożywczy
+-120.0,Rozrywka,2025-06-06,Kino
+200.0,Zwrot,2025-06-10,Zwrot od znajomego
+-150.0,Transport,2025-06-12,Bilet miesięczny
+-300.0,Jedzenie,2025-07-02,Restauracja
+500.0,Wynagrodzenie,2025-07-01,Dodatkowy projekt
+200.0,Wynagrodzenie,2025-07-05,
+300.0,Wynagrodzenie,2025-09-01,Kino
+-400.0,Wynagrodzenie,2025-05-02,Kara
