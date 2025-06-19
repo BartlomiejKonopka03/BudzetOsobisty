@@ -15,6 +15,7 @@ def pokaz_saldo_miesieczne(balance_dict):
     plt.ylabel("Saldo")
     plt.xticks(rotation=45)
     plt.tight_layout()
+    plt.savefig("saldo_miesieczne.png")
     plt.show()
 
 def pokaz_podsumowanie_kategorii(summary_dict):
@@ -31,4 +32,5 @@ def pokaz_podsumowanie_kategorii(summary_dict):
     plt.xlabel("Suma")
     plt.ylabel("Kategoria")
     plt.tight_layout()
+    plt.savefig("podsumowanie_kategorii.png")
     plt.show()

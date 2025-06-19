@@ -1,8 +1,9 @@
 import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import messagebox, ttk, filedialog
 from logic import Budget, Transaction
-from data import save_transactions_to_csv, load_transactions_from_csv
+from data import save_transactions_to_json, load_transactions_from_json
 from auth import login_user, register_user
+from utils import recursive_sum, log_action
 import os
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
@@ -36,7 +37,7 @@ class BudgetApp:
         user = login_user(username, password)
         if user:
             self.user = user
-            self.budget.transactions = load_transactions_from_csv(f"data/{user}_transactions.csv")
+            self.budget.transactions = load_transactions_from_json(f"data/{user}_transactions.json")
             self.main_screen()
         else:
             messagebox.showerror("Błąd", "Niepoprawne dane logowania")
@@ -76,7 +77,6 @@ class BudgetApp:
 
         tk.Button(form_frame, text="Dodaj transakcję", command=self.add_transaction).grid(row=4, column=0, columnspan=2, pady=5)
 
-        # Scrollable table
         frame = tk.Frame(self.root)
         frame.pack(pady=5)
 
@@ -96,9 +96,21 @@ class BudgetApp:
         tk.Button(action_frame, text="Usuń zaznaczoną", command=self.delete_selected_transaction).pack(side=tk.LEFT, padx=5)
         tk.Button(action_frame, text="Pokaż saldo miesięczne", command=self.show_analysis).pack(side=tk.LEFT, padx=5)
         tk.Button(action_frame, text="Pokaż sumy kategorii", command=self.show_category_summary).pack(side=tk.LEFT, padx=5)
+        tk.Button(action_frame, text="Rekurencyjna suma transakcji", command=self.show_recursive_sum).pack(side=tk.LEFT, padx=5)
+        tk.Button(action_frame, text="Pokaż unikalne kategorie", command=self.show_unique_categories).pack(side=tk.LEFT, padx=5)
+        tk.Button(action_frame, text="Średnia transakcji", command=self.show_average_transaction).pack(side=tk.LEFT, padx=5)
 
         self.refresh_table()
         tk.Button(self.root, text="Wyloguj", command=self.logout).pack(pady=10)
+
+        search_frame = tk.Frame(self.root)
+        search_frame.pack(pady=5)
+
+        tk.Label(search_frame, text="Wyszukaj:").pack(side=tk.LEFT)
+        self.search_entry = tk.Entry(search_frame)
+        self.search_entry.pack(side=tk.LEFT, padx=5)
+        tk.Button(search_frame, text="Szukaj", command=self.search_transactions).pack(side=tk.LEFT)
+        tk.Button(search_frame, text="Pokaż wszystkie", command=self.refresh_table).pack(side=tk.LEFT, padx=5)
 
     def add_transaction(self):
         try:
@@ -106,9 +118,14 @@ class BudgetApp:
             category = self.category_entry.get()
             date = self.date_entry.get()
             description = self.description_entry.get()
+
+            assert amount != 0, "Kwota nie może być zerowa"
+
             transaction = Transaction(amount, category, date, description)
             self.budget.add_transaction(transaction)
             self.refresh_table()
+        except AssertionError as ae:
+            messagebox.showerror("Błąd", f"Błąd danych: {ae}")
         except Exception as e:
             messagebox.showerror("Błąd", str(e))
 
@@ -142,7 +159,45 @@ class BudgetApp:
         for row in self.tree.get_children():
             self.tree.delete(row)
         for t in self.budget.transactions:
+            row = (t.amount, t.category, t.date, t.description)
+            self.tree.insert("", tk.END, values=row)
+
+    def search_transactions(self):
+        query = self.search_entry.get().lower()
+        if not query:
+            messagebox.showwarning("Brak danych", "Wprowadź tekst do wyszukania.")
+            return
+
+        filtered = [
+            t for t in self.budget.transactions
+            if query in str(t.amount).lower()
+            or query in t.category.lower()
+            or query in t.description.lower()
+            or query in str(t.date)
+        ]
+        self.tree.delete(*self.tree.get_children())
+        for t in filtered:
             self.tree.insert("", tk.END, values=(t.amount, t.category, t.date, t.description))
+
+    @log_action
+    def show_recursive_sum(self):
+        total = recursive_sum(self.budget.transactions)
+        messagebox.showinfo("Suma (rekurencyjna)", f"Łączna kwota wszystkich transakcji: {total:.2f} zł")
+
+    def show_unique_categories(self):
+        categories = {t.category for t in self.budget.transactions}
+        messagebox.showinfo("Unikalne kategorie", "\n".join(categories) if categories else "Brak danych.")
+
+    def show_average_transaction(self):
+        try:
+            kwoty = list(map(lambda t: t.amount, self.budget.transactions))
+            if not kwoty:
+                messagebox.showinfo("Średnia", "Brak danych do analizy.")
+                return
+            srednia = sum(kwoty) / len(kwoty)
+            messagebox.showinfo("Średnia transakcji", f"Średnia wartość transakcji: {srednia:.2f} zł")
+        except Exception as e:
+            messagebox.showerror("Błąd", str(e))
 
     def show_analysis(self):
         balance = self.budget.get_monthly_balance()
@@ -159,7 +214,7 @@ class BudgetApp:
         ax.set_xlabel("Miesiąc")
         ax.set_ylabel("Saldo")
         ax.tick_params(axis='x', rotation=45)
-
+        fig.savefig("saldo_miesieczne.png")
         self.show_plot(fig, "Saldo miesięczne")
 
     def show_category_summary(self):
@@ -176,18 +231,28 @@ class BudgetApp:
         ax.set_title("Suma według kategorii")
         ax.set_xlabel("Suma")
         ax.set_ylabel("Kategoria")
-
+        fig.savefig("suma_kategorii.png")
         self.show_plot(fig, "Suma według kategorii")
 
     def show_plot(self, fig, title):
         window = tk.Toplevel(self.root)
         window.title(title)
+
         canvas = FigureCanvasTkAgg(fig, master=window)
         canvas.draw()
         canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
+        def save_plot():
+            filepath = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png")])
+            if filepath:
+                fig.savefig(filepath)
+                messagebox.showinfo("Zapisano", f"Wykres zapisano jako: {filepath}")
+
+        save_button = tk.Button(window, text="Zapisz wykres jako PNG", command=save_plot)
+        save_button.pack(pady=5)
+
     def logout(self):
-        save_transactions_to_csv(self.budget.transactions, f"data/{self.user}_transactions.csv")
+        save_transactions_to_json(self.budget.transactions, f"data/{self.user}_transactions.json")
         self.user = None
         self.budget = Budget()
         self.login_screen()

@@ -1,4 +1,5 @@
 import unittest
+import os
 from charts import pokaz_saldo_miesieczne, pokaz_podsumowanie_kategorii
 
 class TestCharts(unittest.TestCase):
@@ -33,6 +34,15 @@ class TestCharts(unittest.TestCase):
             pokaz_podsumowanie_kategorii({})
         except Exception as e:
             self.fail(f"pokaz_podsumowanie_kategorii (brak danych) zgłosiło wyjątek: {e}")
+
+    def test_wykres_saldo_zapisuje_png(self):
+        filename = "saldo_miesieczne.png"
+        if os.path.exists(filename):
+            os.remove(filename)
+        data = {"2025-06": 500}
+        pokaz_saldo_miesieczne(data)
+        self.assertTrue(os.path.exists(filename))
+        os.remove(filename)
 
 if __name__ == "__main__":
     unittest.main()

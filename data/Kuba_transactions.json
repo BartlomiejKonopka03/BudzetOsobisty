@@ -1,0 +1,26 @@
+[
+  {
+    "amount": 3000.0,
+    "category": "Wynagrodzenie",
+    "date": "2025-06-01",
+    "description": "Umowa zlecenie"
+  },
+  {
+    "amount": -800.0,
+    "category": "Czynsz",
+    "date": "2025-06-03",
+    "description": "Opłata za mieszkanie"
+  },
+  {
+    "amount": -120.0,
+    "category": "Transport",
+    "date": "2025-06-05",
+    "description": "Bilet miesięczny"
+  },
+  {
+    "amount": -250.0,
+    "category": "Jedzenie",
+    "date": "2025-06-06",
+    "description": "Zakupy w Lidlu"
+  }
+]

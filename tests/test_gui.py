@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 import tkinter as tk
 from gui import BudgetApp
+from logic import Transaction
 
 class TestBudgetAppGUI(unittest.TestCase):
 
@@ -43,6 +44,21 @@ class TestBudgetAppGUI(unittest.TestCase):
         self.app.password_entry.insert(0, "wrong")
         self.app.login()
         mock_showerror.assert_called_once_with("Błąd", "Niepoprawne dane logowania")
+
+    @patch("tkinter.messagebox.showinfo")
+    def test_show_average_transaction(self, mock_showinfo):
+        self.app.budget.transactions = [
+            Transaction(100, "jedzenie", "2024-01-01", "pizza"),
+            Transaction(200, "rozrywka", "2024-01-02", "kino")
+        ]
+        self.app.show_average_transaction()
+        mock_showinfo.assert_called_with("Średnia transakcji", "Średnia wartość transakcji: 150.00 zł")
+
+    @patch("tkinter.messagebox.showinfo")
+    def test_logout_resets_user(self, mock_showinfo):
+        self.app.user = "test_user"
+        self.app.logout()
+        self.assertIsNone(self.app.user)
 
 if __name__ == '__main__':
     unittest.main()

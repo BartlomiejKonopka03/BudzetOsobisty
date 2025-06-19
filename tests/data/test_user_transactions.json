@@ -1,0 +1,14 @@
+[
+  {
+    "amount": 100.0,
+    "category": "Test",
+    "date": "2025-01-01",
+    "description": "Przychód testowy"
+  },
+  {
+    "amount": -50.0,
+    "category": "Test",
+    "date": "2025-01-02",
+    "description": "Wydatek testowy"
+  }
+]

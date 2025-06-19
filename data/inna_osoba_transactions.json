@@ -1,0 +1,62 @@
+[
+  {
+    "amount": 4500.0,
+    "category": "Wynagrodzenie",
+    "date": "2025-05-01",
+    "description": "Wypłata etatowa"
+  },
+  {
+    "amount": -1200.0,
+    "category": "Czynsz",
+    "date": "2025-05-03",
+    "description": "Mieszkanie"
+  },
+  {
+    "amount": -350.0,
+    "category": "Jedzenie",
+    "date": "2025-05-06",
+    "description": "Sklep"
+  },
+  {
+    "amount": -80.0,
+    "category": "Rozrywka",
+    "date": "2025-05-10",
+    "description": "Netflix"
+  },
+  {
+    "amount": -200.0,
+    "category": "Transport",
+    "date": "2025-05-12",
+    "description": "Benzyna"
+  },
+  {
+    "amount": 400.0,
+    "category": "Dodatkowe",
+    "date": "2025-05-15",
+    "description": "Zlecenie"
+  },
+  {
+    "amount": -250.0,
+    "category": "Jedzenie",
+    "date": "2025-06-01",
+    "description": "Restauracja"
+  },
+  {
+    "amount": -150.0,
+    "category": "Rozrywka",
+    "date": "2025-06-05",
+    "description": "Teatr"
+  },
+  {
+    "amount": -90.0,
+    "category": "Transport",
+    "date": "2025-06-08",
+    "description": "Bilet"
+  },
+  {
+    "amount": 600.0,
+    "category": "Zwrot",
+    "date": "2025-06-12",
+    "description": "Zwrot podatku"
+  }
+]

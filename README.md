@@ -2,12 +2,16 @@
 
 ## Opis
 
-Aplikacja pozwala na zarządzanie osobistymi finansami za pomocą przejrzystego **graficznego interfejsu użytkownika (GUI)**. Obsługuje wielu użytkowników, zapisuje dane do plików CSV i umożliwia:
+Aplikacja służy do zarządzania budżetem osobistym z wykorzystaniem graficznego interfejsu użytkownika (GUI). Pozwala użytkownikowi rejestrować, przeglądać i analizować swoje transakcje finansowe. Dane przechowywane są w plikach `.json`, osobno dla każdego użytkownika.
 
+### Główne funkcje:
+- logowanie i rejestracja z użyciem haszowania SHA-256,
 - dodawanie, edytowanie i usuwanie transakcji,
-- wizualizację danych na wykresach (saldo miesięczne, suma wg kategorii),
-- zapisywanie raportów tekstowych,
-- automatyczny zapis i odczyt danych użytkownika.
+- wykresy miesięcznego salda oraz podsumowania kategorii,
+- średnia i rekurencyjna suma transakcji,
+- filtrowanie i wyszukiwanie transakcji,
+- zapis wykresów do plików `.png`,
+- automatyczne zapisywanie danych użytkownika.
 
 ---
 
@@ -15,78 +19,87 @@ Aplikacja pozwala na zarządzanie osobistymi finansami za pomocą przejrzystego 
 
 1. **Zainstaluj wymagane biblioteki**:
 
+```bash
 pip install matplotlib
+```
 
-2. **Uruchom aplikację**:
+2. **Uruchom program**:
 
+```bash
 python gui.py
+```
 
 ---
 
 ## Logowanie i rejestracja
 
-- Przy uruchomieniu aplikacji pojawia się okno logowania.
-- Możesz się **zalogować** lub **zarejestrować nowe konto**.
-- Dane logowania (SHA-256) są przechowywane w pliku `data/users.csv`.
-- Transakcje są zapisywane w osobnych plikach CSV dla każdego użytkownika (`data/<login>_transactions.csv`).
+- Przy pierwszym uruchomieniu pojawia się ekran logowania.
+- Użytkownik może się zalogować lub utworzyć nowe konto.
+- Dane logowania zapisywane są w pliku:  
+  `data/users.json`
+- Dane transakcji zapisywane są osobno dla każdego użytkownika w pliku:  
+  `data/<login>_transactions.json`
 
 ---
 
 ## Funkcjonalności po zalogowaniu
 
-1. **Dodaj transakcję** – podaj kwotę, kategorię, datę (`RRRR-MM-DD`) i opis.
-
-2. **Edytuj transakcję** – wybierz istniejący wpis z tabeli i edytuj dane.
-
-3. **Usuń transakcję** – zaznacz wiersz i usuń kliknięciem.
-
-4. **Pokaż saldo miesięczne** – wyświetla wykres słupkowy z miesięcznym bilansem.
-
-5. **Pokaż sumy kategorii** – pokazuje wykres poziomy z podsumowaniem wydatków i przychodów wg kategorii.
-
-6. **Zapis do pliku** – dane zapisywane są automatycznie po wylogowaniu.
-
-7. **Wylogowanie** – zapisuje dane i powraca do ekranu logowania.
+- **Dodaj transakcję** – wpisz kwotę, kategorię, datę (YYYY-MM-DD), opis.
+- **Edytuj/usuń transakcję** – zaznacz transakcję w tabeli.
+- **Saldo miesięczne** – wykres pokazujący sumę transakcji z każdego miesiąca.
+- **Suma wg kategorii** – wykres pokazujący rozkład wydatków/przychodów.
+- **Średnia transakcji** – oblicza średnią wartość transakcji.
+- **Rekurencyjna suma** – oblicza sumę rekurencyjnie.
+- **Unikalne kategorie** – pokazuje wszystkie kategorie transakcji.
+- **Wyszukiwanie** – filtruje po dowolnym fragmencie tekstu.
+- **Zapis wykresu do PNG** – każdy wykres można zapisać do pliku.
+- **Wylogowanie** – zapisuje dane i wraca do ekranu logowania.
 
 ---
 
-## Struktura plików
+## Struktura projektu
 
-- `gui.py` – główny plik uruchamiający interfejs graficzny
-- `logic.py` – klasy: `Transaction`, `Budget` i logika działania
-- `data.py` – obsługa CSV: odczyt i zapis transakcji
-- `auth.py` – funkcje rejestracji, logowania i walidacji użytkowników
-- `utils.py` – zapis raportu tekstowego
-- `charts.py` – wykresy matplotlib
-- `tests/` – testy jednostkowe w `unittest`
+```
+├── gui.py               # Główny plik uruchamiający aplikację
+├── logic.py             # Klasy Transaction, Budget, IncomeTransaction
+├── data.py              # Obsługa zapisu/odczytu transakcji z JSON
+├── auth.py              # Rejestracja i logowanie użytkowników
+├── charts.py            # Tworzenie wykresów (matplotlib)
+├── utils.py             # Raporty, logowanie akcji, rekurencja
+├── data/                # Folder z plikami JSON użytkowników
+└── tests/               # Folder z testami jednostkowymi
+```
 
 ---
 
-## Dane i bezpieczeństwo
+## Bezpieczeństwo
 
-- Dane użytkownika zapisywane są lokalnie w `data/`.
-- Hasła są szyfrowane przy pomocy algorytmu SHA-256.
-- Raport można zapisać do pliku `raport.txt`.
+- Hasła są haszowane przy użyciu SHA-256.
+- Dane zapisywane są lokalnie w folderze `data/`, bez udziału internetu.
+- Pliki transakcji użytkownika są odseparowane i nazwane zgodnie z loginem.
 
 ---
 
 ## Testowanie
 
-Folder `tests/` zawiera testy jednostkowe m.in. dla:
-- logiki finansowej (`Budget`, `Transaction`),
-- zapisu i odczytu plików,
-- rejestracji i logowania,
-- raportu tekstowego (`utils.py`).
+W katalogu `tests/` znajdują się testy `unittest`, obejmujące:
+
+- funkcje z plików `logic.py`, `auth.py`, `data.py`,
+- testy GUI z wykorzystaniem `unittest.mock`,
+- testy wykresów,
+- testy zapisu i ładowania danych użytkownika.
 
 ---
 
 ## Wymagania
 
 - Python 3.9 lub nowszy
-- Biblioteki: `tkinter`, `matplotlib`
+- Biblioteki:
+  - `tkinter`
+  - `matplotlib`
 
 ---
 
 ## Wnioski
 
-Projekt zakładał stworzenie graficznej aplikacji do zarządzania budżetem osobistym, umożliwiającej użytkownikom rejestrowanie i analizowanie własnych finansów. Zrealizowano wszystkie główne funkcjonalności, takie jak dodawanie, edycja i usuwanie transakcji, prezentowanie wykresów salda oraz kategorii, a także automatyczne zapisywanie danych do plików CSV. Interfejs graficzny oparty na tkinter znacznie ułatwia korzystanie z programu, a integracja z biblioteką matplotlib pozwala na czytelną wizualizację danych. Projekt został zrealizowany w sposób modułowy, z rozdzieleniem logiki, interfejsu i obsługi danych, co sprzyja jego dalszemu rozwojowi.
+Aplikacja została zaprojektowana jako graficzny system do zarządzania finansami osobistymi. Oferuje wszystkie podstawowe funkcjonalności potrzebne do śledzenia dochodów i wydatków. Zastosowanie formatu JSON pozwala na przechowywanie danych w sposób przejrzysty i rozszerzalny. Projekt charakteryzuje się modularną strukturą i został uzupełniony o testy jednostkowe, co ułatwia jego dalszy rozwój i konserwację.

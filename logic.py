@@ -1,10 +1,10 @@
 from datetime import datetime
 
 class Transaction:
-    def __init__(self, amount, category, date_str, description=""):
+    def __init__(self, amount, category, date, description=""):
         self.amount = float(amount)
         self.category = category
-        self.date = self._parse_date(date_str)
+        self.date = self._parse_date(date)
         self.description = description
 
     def _parse_date(self, date_str):
@@ -15,6 +15,10 @@ class Transaction:
 
     def __str__(self):
         return f"{self.date} | {self.category} | {self.amount:.2f} zł | {self.description}"
+
+class IncomeTransaction(Transaction):
+    def __init__(self, amount, date, description=""):
+        super().__init__(amount, "Przychód", date, description)
 
 class Budget:
     def __init__(self):
